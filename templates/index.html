@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>skAIn</title>
+    <style>
+        body { font-family: 'Apple SD Gothic Neo', sans-serif; text-align: center; background-color: #f0f2f5; color: #333; margin: 0; padding: 20px; }
+        h1 { margin-top: 20px; color: #2c3e50; font-weight: 800; }
+        .subtitle { color: #e74c3c; font-weight: bold; }
+        
+        /* 화면 전환 */
+        .step-container { display: none; max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .active-step { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 버튼 스타일 */
+        .btn {
+            margin-top: 20px; padding: 15px 35px; font-size: 18px; font-weight: bold;
+            color: white; border: none; border-radius: 30px; cursor: pointer; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.3s;
+        }
+        .btn-start { background-color: #3498db; }
+        .btn-start:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-analyze { background-color: #2ecc71; display: none; /* 처음엔 숨김 */ }
+        .btn-analyze:hover { background-color: #27ae60; transform: translateY(-2px); }
+        .btn-retry { background-color: #95a5a6; margin-top: 30px; }
+
+        /* Step 1 */
+        .guide-list { text-align: left; background: #f8f9fa; padding: 20px 30px; border-radius: 10px; margin: 20px 0; }
+        .guide-list li { margin-bottom: 15px; font-size: 16px; line-height: 1.5; }
+        .highlight { color: #e74c3c; font-weight: bold; }
+
+        /* Step 2 */
+        .camera-wrapper { position: relative; display: inline-block; margin-top: 10px; }
+        img { border-radius: 10px; max-width: 100%; height: auto; display: block; }
+        /* 얼굴 맞추기 타원형 가이드 */
+        .face-guide {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 250px; height: 350px; border: 3px dashed #f1c40f; border-radius: 50%;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3); /* 주변 배경 어둡게 */
+            pointer-events: none;
+        }
+
+        /* 진행률 */
+        .progress-box { margin-top: 25px; }
+        .progress-text { font-weight: bold; color: #34495e; margin-bottom: 10px; font-size: 16px; }
+        .progress-bg { background-color: #ecf0f1; border-radius: 10px; height: 15px; width: 100%; overflow: hidden; }
+        .progress-fill { background-color: #3498db; height: 100%; width: 0%; transition: width 0.1s linear; }
+
+        /* Step 3 */
+        .score-item { margin-bottom: 12px; text-align: left;}
+        .score-label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 5px; font-size: 14px;}
+        .res-progress-bg { background-color: #ecf0f1; border-radius: 10px; height: 10px; width: 100%; overflow: hidden; }
+        .res-progress-fill { height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+        .safe { background-color: #2ecc71; } .warn { background-color: #f1c40f; } .danger { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <h1>skAIn 최최종</h1>
+    
+    <div id="step-1" class="step-container active-step">
+        <h2>정확한 피부 분석을 위한 안내</h2>
+        <p>AI가 피부를 완벽하게 분석할 수 있도록 아래 사항을 지켜주세요.</p>
+        
+        <div class="guide-list">
+            <ul>
+                <li><strong>조명:</strong> 얼굴에 그림자가 지지 않도록 <span class="highlight">밝은 정면 조명</span> 아래에 서주세요. (역광 주의)</li>
+                <li><strong>방해 요소:</strong> 안경을 벗고, 이마가 보이도록 <span class="highlight">앞머리를 넘겨주세요.</span></li>
+                <li><strong>표정 및 자세:</strong> 무표정을 유지한 채 턱을 들거나 숙이지 말고 <span class="highlight">렌즈를 정면으로 응시</span>하세요.</li>
+            </ul>
+        </div>
+        
+        <button class="btn btn-start" onclick="startAnalysis()"> 시작하기 </button>
+    </div>
+
+    <div id="step-2" class="step-container">
+        <h2>실시간 AI 피부 스캔</h2>
+        <p>점선 타원 안에 얼굴을 맞춰주세요.</p>
+        
+        <div class="camera-wrapper">
+            <img src="{{ url_for('video_feed') }}" alt="Webcam Stream">
+            <div class="face-guide"></div>
+        </div>
+
+        <div class="progress-box">
+            <div id="progress-text" class="progress-text">AI 분석 준비 중... (0%)</div>
+            <div class="progress-bg">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <button id="btn-analyze" class="btn btn-analyze" onclick="showResults()"> 분석 결과 ㄱㄱ</button>
+    </div>
+
+    <div id="step-3" class="step-container">
+        <h2>정밀 분석 리포트 (0~5점)</h2>
+        <div id="scoresContainer"></div>
+        
+        <button class="btn btn-retry" onclick="location.reload()">재검사하기</button>
+    </div>
+
+    <script>
+// Step 1 > 2 이동 및 지능형 진행률 실행
+        function startAnalysis() {
+            document.getElementById('step-1').classList.remove('active-step');
+            document.getElementById('step-2').classList.add('active-step');
+
+            let progress = 0;
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const btnAnalyze = document.getElementById('btn-analyze');
+
+            // 백엔드에 얼굴보임? 물어보는
+            const interval = setInterval(() => {
+                fetch('/face_status')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.detected) {
+                            // 얼굴이 보일 때만 진행률 증가
+                            progress += 6.66;
+                            progressText.innerHTML = `AI 분석 중... (<span style="color:#2ecc71; font-weight:bold;">얼굴 인식됨</span> ${Math.floor(progress)}%)`;
+                            progressFill.style.backgroundColor = "#3498db"; // 정상 진행 시 파랑
+                        } else {
+                            progress = 0; 
+                            progressText.innerHTML = `타원 안에 얼굴을 유지해주세요. (<span style="color:#e74c3c; font-weight:bold;">인식 끊김!</span> 0%)`;
+                            progressFill.style.backgroundColor = "#e74c3c"; // 경고
+                        }
+
+                        // 100% 도달 시 완료 처리
+                        if (progress >= 100) {
+                            progress = 100;
+                            clearInterval(interval);
+                            progressText.innerText = "분석 완료! 아래 버튼을 눌러 결과를 확인하세요.";
+                            progressFill.style.backgroundColor = "#2ecc71"; // 완료 시 초록색으로 변경
+                            btnAnalyze.style.display = "inline-block"; // 결과 보기 버튼 등장
+                        }
+                        
+                        // 실제 게이지 바 UI
+                        progressFill.style.width = progress + '%';
+                    })
+                    .catch(err => console.error('상태 확인 오류:', err));
+            }, 200);
+        }
+
+        // Step 2 -> 3 이동 및 서버에서 결과 가져오기
+        function showResults() {
+            // 결과창으로 화면 전환
+            document.getElementById('step-2').classList.remove('active-step');
+            document.getElementById('step-3').classList.add('active-step');
+            const container = document.getElementById('scoresContainer');
+
+            // 백엔드에서 분석 완료된 데이터 가져오기
+            fetch('/get_result')
+                .then(response => response.json())
+                .then(data => {
+                    let htmlContent = "";
+                    const scores = data.scores;
+                    
+                    for (const [feature, score] of Object.entries(scores)) {
+                        let percentage = (score / 5.0) * 100;
+                        let colorClass = "safe";
+                        if(score > 3.0) colorClass = "danger";
+                        else if (score > 1.5) colorClass = "warn";
+
+                        htmlContent += `
+                            <div class="score-item">
+                                <div class="score-label">
+                                    <span>${feature}</span>
+                                    <span>${score.toFixed(1)} / 5.0</span>
+                                </div>
+                                <div class="res-progress-bg">
+                                    <div class="res-progress-fill ${colorClass}" style="width: ${percentage}%;"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    container.innerHTML = htmlContent;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
