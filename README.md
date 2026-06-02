@@ -4,7 +4,7 @@
 ![Flask](https://img.shields.io/badge/Flask-3.0.0-black?logo=flask)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.8.0-green?logo=opencv)
 ![ONNX](https://img.shields.io/badge/ONNX_Runtime-1.16.0-blue?logo=onnx)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![License](https://img.shields.io/badge/License-HJ-yellow)
 
 **skAIn PRO**는 웹캠을 통해 사용자의 얼굴을 실시간으로 추적하고, 18가지 피부 지표를 정밀하게 분석하는 지능형 컴퓨터 비전(CV) 웹 애플리케이션입니다. 무거운 딥러닝 모델을 경량화하여 저사양 하드웨어에서도 쾌적하게 구동되도록 최적화되었습니다.
 
@@ -41,25 +41,31 @@ graph TD
     D -->|3초 연속 유지 성공| F[ONNX Runtime: 18개 피부 지표 추론]:::ai
     F --> G[결과 JSON 반환 및 UI 렌더링]:::frontend
 ```
-🚀 빠른 시작 (Quick Start)
+
+<br>
+
+## 🚀 빠른 시작 (Quick Start)
 본 프로젝트를 로컬 환경(본인의 컴퓨터)에서 직접 실행해 보는 방법입니다.
 
 1. 레포지토리 클론 (Clone)
-Bash
+```Bash
 git clone [https://github.com/내아이디/skAIn-PRO.git](https://github.com/내아이디/skAIn.git)
 cd skAIn
+```
 (주의: 내아이디 부분을 본인의 깃허브 아이디로 변경할 것)
 
 2. 가상환경 세팅 및 의존성 설치
 파이썬 환경 충돌을 막기 위해 가상환경(venv 또는 conda) 사용을 권장합니다.
 
-Bash
+```Bash
 pip install -r requirements.txt
+```
 3. 서버 실행
 노트북에 웹캠이 활성화되어 있는지 확인한 후, 아래 명령어를 실행합니다.
 
-Bash
+```Bash
 python3 app_web.py
+```
 4. 웹 브라우저 접속
 터미널에 서버 구동 메시지가 나타나면, 브라우저를 열고 아래 주소로 접속하세요.
 
@@ -73,4 +79,4 @@ Mac 환경에서 카메라 불이 들어오지 않거나 에러가 날 때
 아이폰 '연속성 카메라(Continuity Camera)'가 켜져 있을 경우, app_web.py 내의 cv2.VideoCapture(1)을 0 또는 다른 인덱스로 변경해야 할 수 있습니다.
 
 📝 License
-This project is licensed team 19?
+This project is licensed by HJ
