@@ -10,7 +10,7 @@
 
 <br>
 
-## ✨ 주요 아키텍처 및 특징 (Key Features)
+##  주요 아키텍처 및 특징 (Key Features)
 
  **Edge-Optimized AI 추론**: 
   * 원본 딥러닝 모델을 ONNX 형식으로 양자화(Quantization)하여 가중치 용량을 대폭 축소.
@@ -23,7 +23,7 @@
 
 <br>
 
-## 📊 시스템 동작 순서도 (System Architecture Flow)
+##  시스템 동작 순서도 (System Architecture Flow)
 
 ```mermaid
 graph TD
@@ -44,10 +44,10 @@ graph TD
 
 <br>
 
-## 🚀 빠른 시작 (Quick Start)
+##  빠른 시작
 본 프로젝트를 로컬 환경(본인의 컴퓨터)에서 직접 실행해 보는 방법입니다.
 
-1. 레포지토리 클론 (Clone)
+1. 레포지토리 클론
 ```Bash
 git clone [https://github.com/내아이디/skAIn-PRO.git](https://github.com/내아이디/skAIn.git)
 cd skAIn
@@ -78,5 +78,5 @@ Mac 환경에서 카메라 불이 들어오지 않거나 에러가 날 때
 
 아이폰 '연속성 카메라(Continuity Camera)'가 켜져 있을 경우, app_web.py 내의 cv2.VideoCapture(1)을 0 또는 다른 인덱스로 변경해야 할 수 있습니다.
 
-📝 License
+License
 This project is licensed by HJ
