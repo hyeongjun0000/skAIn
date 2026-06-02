@@ -18,7 +18,7 @@ feature_names = [
 
 print("모델을 불러오는 중...")
 # 모델 파일 연결
-session = ort.InferenceSession("skin_model.onnx")
+session = ort.InferenceSession("models/skin_model.onnx")
 input_name = session.get_inputs()[0].name
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
