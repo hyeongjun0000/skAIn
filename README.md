@@ -26,13 +26,21 @@
 ## 📊 시스템 동작 순서도 (System Architecture Flow)
 
 ```mermaid
-
 graph TD
     %% 노드 스타일 정의
     classDef frontend fill:#f9f9f9,stroke:#333,stroke-width:2px;
     classDef backend fill:#e1f5fe,stroke:#039be5,stroke-width:2px;
     classDef ai fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
 
+    A[웹 브라우저 클라이언트]:::frontend -->|웹캠 권한 허용 및 스트리밍 요청| B(Flask 서버: 실시간 비디오 프레임 수신):::backend
+    B --> C{OpenCV 얼굴 감지 추적}:::ai
+    
+    C -->|얼굴 감지 됨| D[Frontend: 진행률 200ms 단위 증가]:::frontend
+    C -->|얼굴 이탈| E[Frontend: 진행률 0% 즉각 초기화 & 경고]:::frontend
+    
+    D -->|3초 연속 유지 성공| F[ONNX Runtime: 18개 피부 지표 추론]:::ai
+    F --> G[결과 JSON 반환 및 UI 렌더링]:::frontend
+```
 🚀 빠른 시작 (Quick Start)
 본 프로젝트를 로컬 환경(본인의 컴퓨터)에서 직접 실행해 보는 방법입니다.
 
