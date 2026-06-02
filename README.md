@@ -10,7 +10,7 @@
 
 <br>
 
-##  주요 아키텍처 및 특징 (Key Features)
+##  주요 아키텍처 및 특징
 
  **Edge-Optimized AI 추론**: 
   * 원본 딥러닝 모델을 ONNX 형식으로 양자화(Quantization)하여 가중치 용량을 대폭 축소.
@@ -23,7 +23,7 @@
 
 <br>
 
-##  시스템 동작 순서도 (System Architecture Flow)
+##  시스템 동작 순서도
 
 ```mermaid
 graph TD
